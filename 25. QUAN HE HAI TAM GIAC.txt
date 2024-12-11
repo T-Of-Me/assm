@@ -1,0 +1,235 @@
+ 
+include irvine32.inc
+
+.data
+    msg1 BYTE "Nhap toa do tam giac 1: ", 0
+    msg2 BYTE "Nhap toa do tam giac 2: ", 0
+    msgInput BYTE "Nhap toa do diem (%d, %d): ", 0
+    msgResult BYTE "Ket qua do dai cac canh: ", 0
+    msgDongDang BYTE "Hai tam giac dong dang.", 0
+    msgBangNhau BYTE "Hai tam giac bang nhau.", 0
+    msgKhongQuanHe BYTE "Hai tam giac khong dong dang hoac bang nhau.",0
+    newline BYTE 0Dh, 0Ah, 0
+
+    ; Toa do tam giac 1
+    x1 DWORD ?
+    y1 DWORD ?
+    x2 DWORD ?
+    y2 DWORD ?
+    x3 DWORD ?
+    y3 DWORD ?
+
+    ; Toa do tam giac 2
+    x4 DWORD ?
+    y4 DWORD ?
+    x5 DWORD ?
+    y5 DWORD ?
+    x6 DWORD ?
+    y6 DWORD ?
+
+    ; Bien luu do dai cac canh
+    d1_1 DWORD ?
+    d1_2 DWORD ?
+    d1_3 DWORD ?
+    d2_1 DWORD ?
+    d2_2 DWORD ?
+    d2_3 DWORD ?
+
+.code
+main PROC
+    ; Nhap toa do tam giac 1
+    mov edx, OFFSET msg1
+    call WriteString
+    call Crlf
+    
+    mov edx, OFFSET msgInput
+    mov ecx, 1
+    call WriteString
+    call ReadInt
+    mov x1, eax
+    call ReadInt
+    mov y1, eax
+    call ReadInt
+    mov x2, eax
+    call ReadInt
+    mov y2, eax
+    call ReadInt
+    mov x3, eax
+    call ReadInt
+    mov y3, eax
+
+
+    ; Nhap toa do tam giac 2
+    mov edx, OFFSET msg2
+    call WriteString
+    call Crlf
+    
+    mov edx, OFFSET msgInput
+    mov ecx, 1
+    call WriteString
+    call ReadInt
+    mov x4, eax
+    call ReadInt
+    mov y4, eax
+    call ReadInt
+    mov x5, eax
+    call ReadInt
+    mov y5, eax
+    call ReadInt
+    mov x6, eax
+    call ReadInt
+    mov y6, eax
+
+;;////////////////////////////////////////////////
+    
+    ;Tinh do dai cac canh tam giac 1
+    ; d1_1 = sqrt((x2-x1)^2 + (y2-y1)^2)
+
+    mov eax, x2
+    sub eax, x1             ;eax = x2 - x1
+    imul eax, eax           ;eax = (x2 - x1)^2
+    mov d1_1, eax
+
+    mov eax, y2
+    sub eax, y1
+    imul eax, eax
+
+    add d1_1, eax
+
+    ; d1_2 = sqrt((x3-x2)^2 + (y3-y2)^2)
+    mov eax, x3
+    sub eax, x2
+    imul eax, eax
+    mov d1_2, eax
+
+    mov eax, y3
+    sub eax, y2
+    imul eax, eax
+
+    add d1_2, eax
+
+    ; d1_3 = sqrt((x3-x1)^2 + (y3-y1)^2)
+    mov eax, x3
+    sub eax, x1
+    imul eax, eax
+    mov d1_3, eax
+
+    mov eax, y3
+    sub eax, y1
+    imul eax, eax
+
+    add d1_3, eax
+
+;;////////////////////////////////////////////
+    
+    ;Tinh do dai cac canh tam giac 2
+    ; d2_1 = sqrt((x5-x4)^2 + (y5-y4)^2)
+
+    mov eax, x5
+    sub eax, x4             
+    imul eax, eax           
+    mov d2_1, eax
+
+    mov eax, y5
+    sub eax, y4
+    imul eax, eax
+
+    add d2_1, eax
+
+    ; d2_2 = sqrt((x6-x5)^2 + (y6-y5)^2)
+
+    mov eax, x6
+    sub eax, x5
+    imul eax, eax
+    mov d2_2, eax
+
+    mov eax, y6
+    sub eax, y5
+    imul eax, eax
+
+    add d2_2, eax
+
+    ; d2_3 = sqrt((x6-x4)^2 + (y6-y4)^2)
+    mov eax, x6
+    sub eax, x4
+    imul eax, eax
+    mov d2_3, eax
+
+    mov eax, y6
+    sub eax, y4
+    imul eax, eax
+
+    add d2_3, eax
+
+;//////////////////////////////////////////////
+    
+    ;So sanh 2 tam giac
+    ;Dong dang d1_1 / d2_1 = d1_2 / d2_2 = d1_3 / d2_3
+    ; Tính tỷ lệ d1_1 / d2_1
+    mov eax, d1_1
+    mov edx, 0
+    mov ecx, d2_1
+    idiv ecx                ;ecx = d1_1 / d2_1
+
+    mov ebx, eax
+
+    ; Tính tỷ lệ d1_2 / d2_2
+    mov eax, d1_2
+    mov edx, 0
+    mov ecx, d2_2
+    idiv ecx                ;ecx = d1_2 / d2_2
+
+    cmp ebx, eax
+    jne KhongDongDang
+
+    ; Tính tỷ lệ d1_3 / d2_3
+    mov eax, d1_3
+    mov edx, 0
+    mov ecx, d2_3
+    idiv ecx                ;ecx = d1_3 / d2_3
+
+    cmp ebx, eax
+    jne KhongDongDang
+
+;//////////////////////////////////////
+    
+    mov eax, d1_1
+    mov ebx, d2_1
+    cmp eax, ebx
+    jne KhongDongDang
+
+    mov eax, d1_2
+    mov ebx, d2_2
+    cmp eax, ebx
+    jne KhongDongDang
+
+    mov eax, d1_3
+    mov ebx, d2_3
+    cmp eax, ebx
+    jne KhongDongDang
+
+    jmp BangNhau
+
+;///////////////////////////////////////
+    
+    ;Hien thi ket qua
+    DongDang:
+    mov edx, OFFSET msgDongDang 
+    call WriteString
+    jmp KetThuc
+
+    BangNhau:
+    mov edx, OFFSET msgBangNhau
+    call WriteString
+    jmp KetThuc
+
+    KhongDongDang:
+    mov edx, OFFSET msgKhongQuanHe
+    call WriteString
+    call Crlf
+
+    KetThuc:
+    exit
+
+main ENDP
+END main

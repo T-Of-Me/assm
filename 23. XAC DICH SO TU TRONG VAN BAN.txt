@@ -1,0 +1,45 @@
+INCLUDE Irvine32.inc
+
+ 
+.data
+ 
+    msg1 BYTE 'Nhap mot doan van: ', 0
+    msg2 BYTE 'So word co trong doan van la: ', 0
+    msg3 BYTE ' ',0
+    INPUT BYTE 1200 DUP(0)     
+.code
+main proc
+
+ 
+
+    ; Hien thi thong bao nhap van ban
+    mov edx, offset msg1
+    call writeString
+
+    ; Nhap chuoi tu ban phim
+    mov edx, offset INPUT
+    mov ecx, 1200           
+    call readString
+
+    ; Hien thi thong bao so word
+    call crlf
+    mov edx, offset msg2
+    call writeString
+
+    ; Dem so word trong van ban
+    mov eax, 1
+    mov esi, offset INPUT    
+    
+L1: 
+    cmp BYTE PTR [esi], 0
+    je L3
+    cmp BYTE PTR [esi], ' ' 
+    jne L2
+    inc eax
+L2:
+    inc esi
+    jmp L1
+L3:
+    call writeDec
+    main endp
+    end main

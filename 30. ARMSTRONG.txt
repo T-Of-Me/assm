@@ -1,0 +1,105 @@
+ INCLUDE Irvine32.inc
+
+ 
+.data
+ 
+msg1 BYTE 'Nhap vao so can kiem tra:   ',0
+msg2 BYTE 'Ket qua kiem tra so Armstrong:  '  , 0   
+yes BYTE "YES", 0
+no BYTE "NO", 0
+ 
+RESULT DWORD 0 
+STR_IN dword 100 DUP(0)
+COUNT DWORD 0 
+TONG  DWORD 0
+tong_in DWORD 0
+CHI_SO  DWORD 0
+so_NHAN dword 0 
+.code 
+main PROC 
+ 
+    LEA EDX , MSG1 
+    CALL WRITESTRING 
+;Nhap vao so can kiem tra
+    LEA EDX , STR_IN   
+    MOV ECX , 100 
+    CALL READSTRING 
+    MOV COUNT ,  EAX 
+; chuyen sang so
+    mov ecx , count
+    lea esi , str_in 
+l2:
+    mov al , [esi]
+    sub al , '0'   
+    mov [esi]  ,  al
+    inc esi
+loop l2
+;kiem tra so armstrong  
+         
+ l3:
+     lea edx , str_in 
+    mov edi , CHI_so 
+    mov al , [edx + edi ]
+   movzx ebx , al 
+    cmp ebx , 0 
+    je thoat 
+   call LTT
+    MOV EAX , RESULT 
+    ADD TONG , EAX 
+   
+  inc chi_so
+jmp L3
+thoat:
+    MOV EAX , TONG 
+    LEA EDX , MSG2
+    CALL WRITESTRING 
+    
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ket thuc 
+
+    ;; chuyen mang thanh so 
+    MOV ECX , COUNT 
+   
+    MOV EBX , 1
+    LEA ESI , STR_IN 
+L1:
+    lea edx , str_in 
+    mov edi , COUNT 
+     mov al , [edx + edi - 1 ]
+    movzx eax , al 
+     
+     MUL EBX ; LUU EAX  
+     ADD so_NHAN , eax 
+     IMUL EBX , 10  
+    dec count 
+LOOP L1
+    mov eax , so_NHAN
+    cmp eax ,  TONG
+    je dung
+SAI:
+    mov edx, OFFSET no
+   call WriteString
+    call Crlf
+    jmp KT
+
+DUNG:
+ 
+    
+    mov edx, OFFSET yes
+   call WriteString
+    call crlf
+
+KT:
+    main endp
+
+LTT PROC
+    ; ebx la so can nhan  
+    mov eax , 1
+    MOV ECX , COUNT 
+L1:
+    MUL EBX 
+LOOP L1 
+    MOV RESULT , EAX 
+    RET
+LTT ENDP
+
+	END main

@@ -1,0 +1,85 @@
+INCLUDE IRVINE32.INC 
+.DATA
+MSG BYTE 'NHAP SO :'  , 0 
+MSG2 BYTE 'SO KHONG HOP LE' , 0 
+MSG3 BYTE 'SO HOP  LE ' , 0   ; 0-306-40615-2
+STR_IN byte 100 DUP(0)
+array byte 100 DUP(0)
+COUNT DWORD 0
+result dword 0 
+narray DWORD 100 DUP(0)
+.CODE
+MAIN PROC
+	LEA EDX  , MSG
+	CALL WRITESTRING 
+	LEA EDX , STR_IN
+	MOV ECX , 100
+	CALL READSTRING
+	;CALL WRITEDEC 
+	MOV COUNT , EAX 
+	CMP COUNT , 13 
+	JNZ L1 
+	; chuyen chuoi thanh mang loai bo - 
+	mov ecx , count 
+	lea esi , str_in	
+	lea edi , array 
+L2:
+	mov al , [esi]
+	cmp al , '-'
+	jz l3
+	mov al , [esi]
+	mov [edi] , al 
+	inc esi 
+	inc edi 
+LOOP L2
+jmp l4
+l3:
+	inc esi 
+	jmp l2 
+l4:
+ ; chuyen chuoi thanh day so 
+	lea esi , array	
+	mov ecx , 10
+ls:
+	mov al , [esi]
+	sub al , '0'
+	mov [esi] , al
+	inc esi
+loop ls
+  
+ 
+
+	 ; tinh toan 
+	 mov ecx , 10 
+	 lea esi , array 
+	 mov ebx , 1 ; so de nhan 
+
+	 mov eax , 0 
+	 mov result , 0 
+l5:
+	mov al , [esi] 
+	movzx eax , al 
+	mul ebx ; luu vao eax 
+	add result , eax 
+	inc ebx 
+	inc esi  
+loop l5
+	mov eax , result 
+	;call writedec 
+	
+	mov eax , result 
+	mov ebx , 11 
+	div ebx 
+	cmp edx , 0 
+	jne L1 
+	lea edx , msg3
+	call WRITESTRING
+
+	;call writedec 
+	jmp thoat
+L1:
+	LEA EDX , MSG2 
+	CALL WRITESTRING 
+	thoat:
+MAIN ENDP 
+END MAIN

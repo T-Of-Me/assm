@@ -1,0 +1,105 @@
+INCLUDE Irvine32.inc
+
+ 
+.data
+    msg BYTE 'Nguyen Duc Hoa', 0
+    msg1 BYTE "So phan tu cua mang thu nhat la: ", 0
+    msg2 BYTE "So phan tu cua mang thu hai la: ", 0
+    msg3 BYTE "Mang phai co do dai nhu nhau. Hay nhap lai nhe", 0
+    msg4 BYTE "Khoang cach hamming cua hai mang la: ", 0
+    msg5 BYTE 'Nhap phan tu thu ',0
+    msg6 BYTE ' : ',0
+    array DWORD 50 DUP (0)  
+    array1 DWORD 50 DUP (0)
+    D DWORD ?
+    T DWORD ?
+    count dword 0 
+.code
+main PROC
+
+ 
+
+    ; So phan tu mang thu nhat
+    mov edx, OFFSET msg1
+    call WriteString
+    call ReadDec
+    mov D, eax
+    call crlf
+
+    mov ecx, eax
+	mov esi, offset array
+	mov ebx, 1
+
+    ;nhap phan tu cua mang thu nhat
+L0:
+	mov edx, offset msg5
+	call WriteString 
+	mov eax, ebx
+	call WriteDec
+	inc ebx
+	mov edx, offset msg6
+	call WriteString
+	call ReadInt
+	mov [esi], eax 
+	add esi, 4
+	loop L0
+
+    ; So phan tu mang thu hai
+L1:
+    mov edx, OFFSET msg2
+    call WriteString
+    call ReadDec
+    cmp eax, D 
+    jne not_equal
+
+    mov ecx, eax
+	mov esi, offset array1
+	mov ebx, 1
+
+    ;nhap phan tu cua mang thu hai
+L2:
+	mov edx, offset msg5
+	call WriteString 
+	mov eax, ebx
+	call WriteDec
+	inc ebx
+	mov edx, offset msg6
+	call WriteString
+	call ReadInt
+	mov [esi], eax 
+	add esi, 4
+	loop L2          
+; So sanh 2 phan tu cua 2 mang
+    mov esi, OFFSET array            
+    mov edi, OFFSET array1 
+    mov eax, D
+    mov ecx, eax                   
+    mov edx, 0                   
+
+hamming:
+    mov ebx, [esi]
+    cmp ebx, [edi]                  
+    je equal          
+    inc count 
+equal:
+    add esi , 4          
+    add edi ,       4                 
+    loop hamming       
+
+    ; khoang cach hamming
+    mov eax, count
+    mov edx, OFFSET msg4
+    call WriteString                  
+    call WriteDec                
+    jmp L3
+
+not_equal:
+    mov edx, OFFSET msg3
+    call WriteString
+    call crlf
+    jmp L1
+
+L3:
+    call Crlf
+main ENDP
+END main

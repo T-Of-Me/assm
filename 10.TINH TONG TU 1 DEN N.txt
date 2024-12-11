@@ -1,0 +1,26 @@
+INCLUDE Irvine32.inc
+ 
+.data
+ 
+msg1 BYTE 'Nhap so tu nhien n la: ',0
+msg2 BYTE 'Tong n so tu nhien dau tien la: ',0
+.code
+main proc
+	mov edx,offset msg
+	call writeString
+	call crlf
+	mov edx,offset msg1
+	call writeString
+	call readDec
+	mov ecx,eax
+	mov eax,0
+L1:
+	add eax,ecx
+	LOOP L1
+	
+	mov edx,offset msg2
+	call writeString
+	call writeDec
+
+main endp
+end main

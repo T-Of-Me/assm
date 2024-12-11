@@ -1,0 +1,97 @@
+INCLUDE IRVINE32.INC
+
+.DATA 
+MSG BYTE "SO O HE LA MA :" , 0 
+MSG2 BYTE "SO HE 10  :" , 0 
+OUTT DWORD 100 DUP(?)
+RESULT DWORD 0
+before DWORD ?
+after DWORD ? 
+COUNT DWORD 0
+.CODE
+MAIN PROC
+    LEA EDX , MSG 
+    CALL WRITESTRING 
+   
+   LEA EDX , OUTT
+   MOV ECX , 100
+   CALL READSTRING 
+   MOV COUNT , EAX 
+   LEA ESI , OUTT 
+ls:
+    mov eax ,COUNT 
+    cmp eax , 0 
+    je thoat   
+ 
+   mov AL , [ESI] 
+    call L1 ; ecx 
+    mov before , ecx 
+
+   mov AL , [ESI + 1] 
+   CMP AL , 0 
+   JE NEXT  
+    call L1 ; ecx 
+    mov after , ecx 
+ 
+    cmp ecx , before ; ecx lon hon se tru 
+jl next 
+    sub ecx , before 
+    add result , ecx 
+    inc esi 
+    dec count 
+    jmp next1 
+next: 
+    mov ebx , before 
+    add result , ebx 
+next1: 
+     dec count 
+     inc esi 
+ 
+jmp ls
+    thoat:
+    mov eax , result 
+    call writedec 
+   
+     
+    
+     MAIN ENDP
+ 
+  
+
+L1 proc 
+ 	 
+	CMP AL , 'M'
+    je  _1000
+   
+    CMP AL, 'X'
+     je  _10 
+  
+    CMP AL, 'V'
+       je  _5
+  
+    CMP AL, 'I'
+       je  _1
+
+    _1000: 
+  mov   ECX , 1000
+    jmp thoat
+
+   _10: 
+  mov   ECX , 10
+    jmp thoat
+
+        _5: 
+  mov   ECX , 5
+    jmp thoat
+
+            _1: 
+  mov   ECX , 1
+    jmp thoat
+
+    thoat:
+    RET 
+ L1 endp
+
+ 
+
+END MAIN

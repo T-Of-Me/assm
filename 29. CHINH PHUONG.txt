@@ -1,0 +1,53 @@
+INCLUDE Irvine32.inc
+
+ 
+.data
+ 
+msg1 BYTE 'Nhap vao so can kiem tra: ',0
+msg2 BYTE 'Ket qua kiem tra so chinh phuong: ',0
+D DWORD ?
+T DWORD ?
+yes BYTE "YES", 0
+no BYTE "NO", 0
+.code 
+main PROC 
+	 
+
+;Nhap vao so can kiem tra
+	mov edx, offset msg1
+	call writeString
+	call ReadDec
+	mov D, eax
+	call crlf
+
+;kiem tra so chinh phuong
+    mov edx, offset msg2
+    call WriteString
+    mov ecx, 0
+
+LAP:
+    mov eax, ecx
+    mul ecx  ; BINH PHUONG LEN 
+    cmp eax, D  ; KET QUA BINH PHUONG LON HON GIA TRI KIEM TRA THI LA SAI 
+    je DUNG
+    jl L1
+    jmp SAI
+
+L1:
+    inc ecx
+    jmp LAP
+
+SAI:
+    mov edx, OFFSET no
+    call WriteString
+    call Crlf
+    jmp KT
+
+DUNG:
+    mov edx, OFFSET yes
+    call WriteString
+    call crlf
+
+KT:
+    main endp
+	END main

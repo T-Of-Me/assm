@@ -1,0 +1,87 @@
+INCLUDE Irvine32.inc
+
+ 
+.data
+ 
+array DWORD 50 DUP (0)  
+array1 DWORD 50 DUP (0)
+msg1 BYTE 'Nhap phan tu thu ',0  
+msg2 BYTE 'So lon nhat cua mang la: ',0 
+msg3 BYTE 'So nho nhat cua mang la: ',0  
+msg6 BYTE 'So phan tu cua mang la: ',0 
+msg7 BYTE ' : ',0
+msg8 BYTE ' ',0
+D DWORD ?                     
+Langest DWORD ?
+Smallest DWORD ?
+
+.code 
+main PROC 
+ 
+;nhap so phan tu cua mang
+	mov edx, offset msg6
+	call writeString
+	call ReadDec 
+	mov D, eax
+	call crlf
+
+	mov ecx, eax
+	mov esi, offset array
+ 
+
+;nhap phan tu cua mang
+L1:
+	call ReadInt
+	mov [esi], eax   ; chuyen vao mang array  
+	add esi, 4
+	loop L1
+
+;tim phan tu lon nhat
+	mov ecx, D  ; 
+ 
+	lea esi , array 
+	mov eax, [esi]
+	mov Langest, eax  ; lay phan tu dau tien la lon nhat 
+	add esi, 4
+
+L2:
+	mov eax, [esi]
+	cmp eax, Langest
+	jle L3
+	mov Langest, eax
+
+L3: 
+	add esi, 4
+	loop L2
+
+; in phan tu lon nhat ra man hinh 
+	mov edx, offset msg2
+	call WriteString
+	mov eax, Langest
+	call WriteDec
+	call crlf
+
+; tim phan tu nho nhat
+    lea esi , array 
+	mov ecx, D
+	dec ecx
+	mov eax, [esi]
+	mov smallest, eax
+	add esi, 4
+L4: 
+	mov eax, [esi]
+	cmp eax, smallest 
+	jge L5
+	mov smallest, eax
+L5:
+	add esi, 4
+	loop L4
+; in phan tu nho nhat ra man hinh
+	mov edx, offset msg3
+	call WriteString
+	mov eax, smallest 
+	call writeDec
+	call crlf
+
+	main ENDP
+	END main

@@ -1,0 +1,37 @@
+INCLUDE Irvine32.inc 
+.data 
+  nhap_k BYTE "Nhap k: ",0
+  ket_qua BYTE "Ket qua: ",0
+  num_k DWORD 0
+  re DWORD 0 
+.code 
+main proc 
+lea edx , nhap_k
+call Writestring
+
+call Readint 
+mov num_k , eax 
+call tinh_giai_thua
+
+mov eax ,ebx
+
+lea edx,ket_qua
+call Writestring
+call WriteDec
+ 
+main endp
+
+tinh_giai_thua PROC  ; input eax= n giai thua can tinh 
+                     ; output: kq =  ebx 
+    mov eax , 1 
+    mov ecx , num_k
+ 
+   l1: 
+       mul ecx  ; ket qua luu vao eax 
+   loop l1
+        mov ebx , eax 
+   ret 
+ tinh_giai_thua endp
+      
+
+end main 

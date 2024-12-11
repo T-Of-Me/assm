@@ -1,0 +1,32 @@
+INCLUDE Irvine32.inc
+
+ 
+.data
+    promptMsg BYTE "Nhap mot so nguyen n: ", 0
+    resultMsg BYTE "Tong cac so tu 1 den n la: ", 0
+
+.code
+main PROC
+
+    mov edx, OFFSET promptMsg
+    call WriteString
+
+    call ReadDec
+    mov ecx, eax            
+
+    mov eax, 0                
+    mov ebx, 1            
+
+while_loop:
+    cmp ebx, ecx         ; neu lon hon thi out      
+    jg end_while              
+    add eax, ebx              
+    inc ebx                  
+    jmp while_loop           
+
+end_while:
+    mov edx, OFFSET resultMsg
+    call WriteString
+    call WriteDec                 
+    main ENDP
+    END main

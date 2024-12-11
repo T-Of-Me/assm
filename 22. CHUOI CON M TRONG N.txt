@@ -1,0 +1,75 @@
+ INCLUDE Irvine32.inc
+
+ 
+.data
+     
+    msg1 BYTE 'Nhap xau ky tu: ', 0
+    msg2 BYTE 'Nhap chuoi con can tim kiem trong xau: ', 0
+    msg3 BYTE 'Chuoi con co trong xau ky tu  ', 0
+    msg4 BYTE 'Chuoi con khong co trong xau ky tu', 0
+    INPUT BYTE 20 DUP(0)
+    INPUT1 BYTE 20 DUP(0)
+    count dword 0 
+    decount dword 0 
+.code
+main proc
+
+ 
+    mov edx, offset msg1
+    call writeString
+    mov edx, offset INPUT
+    mov ecx, 20
+    call readString
+    call crlf
+
+    mov edx, offset msg2
+    call writeString
+      lea edx , input1
+    mov ecx, 20
+    call readString
+    call crlf
+    lea esi , input
+    lea edi , input1
+
+L3:    
+    mov al, BYTE PTR [esi]
+    mov bl, BYTE PTR [edi]
+    cmp bl, 0  ; neu ket thuc chuoi can tim thi la tim thay 
+    je L4
+    cmp bl, al  ; hai phan tu trung nhau 
+
+    je L5
+    mov decount , 0 
+    inc esi     ;  neu khong thi tiep tuc tim 
+    cmp al, 0  ;  ket thuc chuoi dang tim thi chua tim thay 
+    inc count 
+    je L6
+    jmp L3
+
+L5:
+    inc decount 
+    inc count 
+    inc esi
+    inc edi
+    jmp L3
+
+L4:    
+
+ 
+    mov edx, offset msg3
+    call WriteString
+
+     mov eax , count 
+     inc eax 
+    sub eax , decount
+    call writedec 
+    call crlf
+    jmp L7
+
+L6:     
+    mov edx, offset msg4
+    call writeString
+
+L7:
+    main endp
+    end main

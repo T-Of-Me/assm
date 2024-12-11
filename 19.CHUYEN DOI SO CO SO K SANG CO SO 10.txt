@@ -1,0 +1,52 @@
+ 	;  M = M + ai * k 
+	; ai la so dau tu phai qua trai 
+	; k = 1  ; m = 0 
+
+ 
+ INCLUDE Irvine32.inc
+
+.data
+    so_k db "Nhap co so k (k < 10): ", 0
+    so_he_k db "Nhap so trong he co so k: ", 0
+    ket_qua db "So trong he 10: ", 0
+    kq DWORD 0 
+    num_he_k DWORD 0
+    num_k DWORD 0
+                             ;M=0 , p = 1
+.code                       ;su dung cong thuc M=M+ai*P   
+                            ; p = p*k
+main PROC
+    lea edx , so_k
+    call writestring
+
+    call readint
+    mov num_he_k,eax
+
+    lea edx , so_he_k
+    call writestring
+
+    call readint
+    mov num_k,eax
+
+    mov ecx ,1
+    mov eax, num_k
+l1:
+    mov ebx , 10  ;  
+    mov edx , 0  ;   
+    div ebx ;      
+    imul edx,ecx ; ai * p    
+    add kq , edx  ; M + ai * p   
+    imul ecx ,num_he_k    ;   
+    cmp eax , 0  ; 
+    jne l1
+
+lea edx , ket_qua
+call WriteString
+ 
+mov eax, kq
+call Writeint
+    
+   
+   
+main ENDP
+END main
